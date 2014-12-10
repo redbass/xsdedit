@@ -1,0 +1,9 @@
+{
+  "name": "xsdedit",
+  "version": "0.0.1",
+  "homepage": "https://github.com/redbass/xsdedit",
+  "license": "MIT",
+  "dependencies": {
+    "d3": "~3.5.2"
+  }
+}

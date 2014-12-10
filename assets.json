@@ -1,0 +1,17 @@
+{
+    "main": {
+
+        "third": {
+            "src": ["bower_components/d3/d3.js"],
+            "dest": "public/js/third.js"
+        },
+
+        "third_min": {
+            "src": ["bower_components/d3/d3.min.js"],
+            "dest": "public/js/third.min.js"
+        },
+
+        "html": ["source/index.html"]
+
+    }
+}
