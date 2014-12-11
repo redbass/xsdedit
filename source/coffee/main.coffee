@@ -1,2 +1,1 @@
-pippo() ->
-  alert "ciao"
+alert()

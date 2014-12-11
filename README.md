@@ -7,8 +7,6 @@ webapp xsd editor
 First run
 ---------
 
-1. Install Bower: `sudo npm install -g bower`
+1. Install grunt: `sudo npm install -g bower grunt grunt-cli`
 
-2. Install grunt: `sudo npm install -g grunt-cli`
-
-3. Install nodejs packages: `npm install`
+2. Install nodejs packages: `npm install`
