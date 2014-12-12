@@ -5,12 +5,21 @@ module.exports = (grunt) ->
       paths:
         node_modules: './node_modules/'
         bower_components: './bower_components/'
+        sas_cache: '.sass-cache'
+        npm_log: 'npm-debug.log'
+
+        src: './source/'
+        src_coffee: './source/coffee/'
+        src_sass: './source/sass/'
+
+        build: './build/'
+        build_js: './build/js/'
+        build_css: './build/css/'
+
+        public: './public/'
         public_js: './public/js/'
         public_css: './public/css/'
         public_fonts: './public/fonts/'
-        src_coffee: 'source/coffee/'
-        build_js: 'build/js/'
-        build_css: 'build/js/'
 
     pkg: grunt.file.readJSON('package.json')
     assets: grunt.file.readJSON('assets.json')
@@ -33,9 +42,25 @@ module.exports = (grunt) ->
           '<%= assets.main.third_css %>',
           '<%= assets.main.third_css_min %>'
         ]
-      vendor:
-        src: ['build/js/**/*.js']
-        dest: '<%= cnfg.paths.public_js %>vendor.js'
+      main_js:
+        src: ['<%= cnfg.paths.build_js %>**/*.js']
+        dest: '<%= cnfg.paths.public_js %>main.js'
+      main_css:
+        src: ['<%= cnfg.paths.build_css %>**/*.css']
+        dest: '<%= cnfg.paths.public_css %>main.css'
+
+    compass:
+      dist:
+        options:
+          sassDir: '<%= cnfg.paths.src_sass %>'
+          cssDir: '<%= cnfg.paths.build_css %>'
+
+    cssmin:
+      main:
+        files:[
+          '<%= cnfg.paths.public_css %>main.min.css':
+            '<%= cnfg.paths.public_css %>main.css'
+        ]
 
     copy:
       third_fonts:
@@ -46,43 +71,50 @@ module.exports = (grunt) ->
 
       index:
         expand: true
-        cwd: 'source'
+        cwd: '<%= cnfg.paths.src %>'
         src: 'index.html'
-        dest: 'public/'
+        dest: '<%= cnfg.paths.public %>'
 
     uglify:
-      all:
+      main:
         files:
-          'public/js/vendor.min.js': 'public/js/vendor.js'
+          '<%= cnfg.paths.public_js %>main.min.js':
+            '<%= cnfg.paths.public_js %>main.js'
+
+    clean:
+      bower_components: ['<%= cnfg.paths.bower_components %>']
+      build: ['<%= cnfg.paths.build %>']
+      public: ['<%= cnfg.paths.public %>']
+      sass_cache: ['<%= cnfg.paths.sas_cache %>']
+      npm_log: '<%= cnfg.paths.npm_log %>'
 
     shell:
       bower_install:
         command: 'bower install'
 
-    clean:
-      bower_components: ['<%= cnfg.paths.bower_components %>']
-      build_js: ['<%= cnfg.paths.build_js %>']
-      public_js: ['<%= cnfg.paths.public_js %>','<%= cnfg.paths.public_css %>']
-
     watch:
       html:
-        files: ['source/index.html']
+        files: ['<%= cnfg.paths.src %>index.html']
         tasks: ['copy:index']
       coffee:
-        files: ['source/**/*.coffee']
-        tasks: [
-          'coffee:all',
-          'uglify']
+        files: ['<%= cnfg.paths.src %>**/*.coffee']
+        tasks: ['coffee',
+                'concat:main_js',
+                'uglify']
       sass:
-        files: ['source/**/*.scss']
-        tasks: ['sass']
+        files: ['<%= cnfg.paths.src %>**/*.sass']
+        tasks: ['compass',
+                'concat:main_css',
+                'cssmin']
 
 
   grunt.registerTask 'build', 'Build all code',
-                     ['coffee:all',
-                      'concat:vendor',
-                      'uglify:all',
-                      'concat:third']
+                     ['coffee',
+                      'compass',
+                      'copy',
+                      'concat',
+                      'uglify',
+                      'cssmin']
 
   grunt.registerTask 'install', 'Install the package on an empty system',
                      ['shell:bower_install',
@@ -97,5 +129,6 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-shell'
   grunt.loadNpmTasks 'grunt-contrib-clean'
   grunt.loadNpmTasks 'grunt-contrib-copy'
-  grunt.loadNpmTasks 'grunt-contrib-sass'
-  grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks 'grunt-contrib-watch'
+  grunt.loadNpmTasks 'grunt-contrib-compass'
+  grunt.loadNpmTasks 'grunt-contrib-cssmin'
