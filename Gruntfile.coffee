@@ -34,7 +34,7 @@ module.exports = (grunt) ->
 
     concat:
       options:
-        separator: ';'
+        separator: ' '
       third:
         files: [
           '<%= assets.main.third %>',
