@@ -1,17 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="xsdedit">
 <head lang="en">
   <link href="css/third.css" rel="stylesheet">
   <link href="css/main.css" rel="stylesheet">
   <meta charset="UTF-8">
   <title></title>
 </head>
-<body ng-app ng-init="qty=1;cost=2">
+<body ng-app>
 
   <div class="site-wrapper color-primary-0">
-    <div class="navbar-wrapper"></div>
-    <div class="content-wrapper">
-      Quantity: <input type="number" min="0" ng-model="qty">
+
+    <ul class="nav nav-tabs">
+      <li role="presentation" class="active"><a ui-sref="index">index</a></li>
+      <li role="presentation"><a ui-sref="xsd">xsd</a></li>
+      <li role="presentation"><a ui-sref="schema">schema</a></li>
+    </ul>
+
+    <div class="content-wrapper" ui-view>
+
     </div>
   </div>
 

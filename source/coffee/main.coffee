@@ -1,1 +1,3 @@
-a = 1
+
+angular.module 'xsdedit', []
+

@@ -11,6 +11,7 @@ module.exports = (grunt) ->
         src: './source/'
         src_coffee: './source/coffee/'
         src_sass: './source/sass/'
+        src_templates: './source/templates/'
 
         build: './build/'
         build_js: './build/js/'
@@ -20,6 +21,7 @@ module.exports = (grunt) ->
         public_js: './public/js/'
         public_css: './public/css/'
         public_fonts: './public/fonts/'
+        public_templates: './public/templates/'
 
     pkg: grunt.file.readJSON('package.json')
     assets: grunt.file.readJSON('assets.json')
@@ -35,6 +37,7 @@ module.exports = (grunt) ->
     concat:
       options:
         separator: ' '
+
       third:
         files: [
           '<%= assets.main.third %>',
@@ -42,9 +45,12 @@ module.exports = (grunt) ->
           '<%= assets.main.third_css %>',
           '<%= assets.main.third_css_min %>'
         ]
+
       main_js:
-        src: ['<%= cnfg.paths.build_js %>**/*.js']
+        src: ['<%= cnfg.paths.build_js %>main.js',
+              '<%= cnfg.paths.build_js %>**/*.js']
         dest: '<%= cnfg.paths.public_js %>main.js'
+
       main_css:
         src: ['<%= cnfg.paths.build_css %>**/*.css']
         dest: '<%= cnfg.paths.public_css %>main.css'
@@ -75,6 +81,18 @@ module.exports = (grunt) ->
         src: 'index.html'
         dest: '<%= cnfg.paths.public %>'
 
+      html:
+        expand: true
+        cwd: '<%= cnfg.paths.src %>'
+        src: '**/*.html'
+        dest: '<%= cnfg.paths.public %>'
+
+      templates:
+        expand: true
+        cwd: '<%= cnfg.paths.src_templates %>'
+        src: '*'
+        dest: '<%= cnfg.paths.public_templates %>'
+
     uglify:
       main:
         files:
@@ -93,9 +111,11 @@ module.exports = (grunt) ->
         command: 'bower install'
 
     watch:
+
       html:
-        files: ['<%= cnfg.paths.src %>index.html']
-        tasks: ['copy:index']
+        files: ['<%= cnfg.paths.src %>**/*.html']
+        tasks: ['newer:copy:html']
+
       coffee:
         files: ['<%= cnfg.paths.src %>**/*.coffee']
         tasks: ['coffee',
@@ -126,9 +146,10 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-concat'
   grunt.loadNpmTasks 'grunt-contrib-uglify'
-  grunt.loadNpmTasks 'grunt-shell'
   grunt.loadNpmTasks 'grunt-contrib-clean'
   grunt.loadNpmTasks 'grunt-contrib-copy'
   grunt.loadNpmTasks 'grunt-contrib-watch'
   grunt.loadNpmTasks 'grunt-contrib-compass'
   grunt.loadNpmTasks 'grunt-contrib-cssmin'
+  grunt.loadNpmTasks 'grunt-shell'
+  grunt.loadNpmTasks 'grunt-newer'
